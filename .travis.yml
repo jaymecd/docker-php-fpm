@@ -1,0 +1,11 @@
+language: bash
+services: docker
+
+before_script:
+  - env | sort
+
+script:
+  - docker build -t jaymecd/php7-fpm .
+
+after_script:
+  - docker images
