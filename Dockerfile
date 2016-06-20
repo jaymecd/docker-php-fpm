@@ -82,3 +82,5 @@ COPY config/ /usr/local/etc/
 COPY entrypoint.sh /usr/local/bin/entrypoint
 
 ENTRYPOINT ["entrypoint"]
+
+CMD ["php-fpm"]
