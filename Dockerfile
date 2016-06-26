@@ -8,7 +8,6 @@ ENV PHP_EXTENTIONS="opcache bcmath bz2 ctype gd fileinfo intl mcrypt pdo_mysql s
     MEMCACHED_VERSION=php7 \
     REDIS_VERSION=3.0.0 \
     GEOIP_VERSION=1.1.0 \
-    COMPOSER_SHA384=070854512ef404f16bac87071a6db9fd9721da1684cd4589b1196c3faf71b9a2682e2311b36a5079825e155ac7ce150d \
     PHP_INI_TIMEZONE=UTC \
     PHP_INI_MEMORY_LIMIT=512M \
     XDEBUG_REMOTE_PORT=9000 \
@@ -22,7 +21,6 @@ RUN set -xe \
   && apk upgrade -U \
   && apk add --no-cache --virtual .build-deps \
       $PHPIZE_DEPS \
-      coreutils \
       libxml2-dev \
       libxslt-dev \
       bzip2-dev \
@@ -65,7 +63,6 @@ RUN set -xe \
     && make -j${NPROC} && make install \
     && docker-php-ext-enable geoip \
   && curl -fsSL -o /tmp/composer-setup.php https://getcomposer.org/installer \
-    && echo "${COMPOSER_SHA384} /tmp/composer-setup.php" | sha384sum -c - \
     && php /tmp/composer-setup.php -- --install-dir=/usr/local/bin --filename=composer \
   && RUN_DEPS="$( \
     scanelf --needed --nobanner --recursive /usr/local \
