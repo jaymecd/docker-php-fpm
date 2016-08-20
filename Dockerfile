@@ -7,7 +7,7 @@ ENV PHP_EXTENTIONS="opcache bcmath bz2 ctype gd fileinfo intl mcrypt pdo_mysql s
     IGBINARY_VERSION=master \
     MEMCACHED_VERSION=php7 \
     REDIS_VERSION=3.0.0 \
-    GEOIP_VERSION=1.1.0 \
+    GEOIP_VERSION=1.1.1 \
     PHP_INI_TIMEZONE=UTC \
     PHP_INI_MEMORY_LIMIT=512M \
     XDEBUG_REMOTE_PORT=9000 \
@@ -18,8 +18,7 @@ RUN set -xe \
   && PECL_EXCLUDE_REGEX='igbinary|memcached|redis|geoip' \
   && PECL_EXTENTIONS="$(echo ${PECL_EXTENTIONS} | tr ' ' '\n' | egrep -v ${PECL_EXCLUDE_REGEX} | xargs echo)" \
   && NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) \
-  && apk upgrade -U \
-  && apk add --no-cache --virtual .build-deps \
+  && apk add -U -u --no-cache --virtual .build-deps \
       $PHPIZE_DEPS \
       util-linux-dev \
       libxml2-dev \
@@ -61,8 +60,6 @@ RUN set -xe \
   && curl -fsSL -o /tmp/ext-geoip.tgz https://pecl.php.net/get/geoip-${GEOIP_VERSION}.tgz \
     && tar zxpf /tmp/ext-geoip.tgz -C /tmp \
     && cd /tmp/geoip-${GEOIP_VERSION} \
-    && curl -fsSL -O https://raw.githubusercontent.com/gplessis/dotdeb-php-geoip/jessie-php70/debian/patches/0001-add-fix-for-PHP7.patch \
-    && patch -p2 < 0001-add-fix-for-PHP7.patch \
     && phpize && ./configure \
     && make -j${NPROC} && make install \
     && docker-php-ext-enable geoip \
