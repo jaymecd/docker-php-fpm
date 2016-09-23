@@ -33,6 +33,7 @@ RUN set -xe \
       libwebp-dev \
       libjpeg-turbo-dev \
       libmemcached-dev \
+      cyrus-sasl-dev \
       geoip-dev \
   && for EXT in ${PHP_EXTENTIONS}; do docker-php-ext-install -j${NPROC} ${EXT} && ( php -m | grep "^${EXT}$" ); done \
   && for EXT in ${PECL_EXTENTIONS}; do pecl install ${EXT} && EXT=$(echo ${EXT} | cut -f1 -d-) && docker-php-ext-enable ${EXT} && ( php -m | grep "^${EXT}$" ); done \
